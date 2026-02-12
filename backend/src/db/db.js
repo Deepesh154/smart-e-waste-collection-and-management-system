@@ -1,9 +1,10 @@
 import mysql from "mysql2/promise"
 
+let connection
 
 const connectDB = async ()=> {
     try {
-        const connection = await mysql.createPool({
+         connection =  mysql.createPool({
              
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -12,7 +13,8 @@ const connectDB = async ()=> {
             port: 3306,
             waitForConnections: true,
             connectionLimit: 10,
-            queueLimit:0
+            queueLimit:0,
+            multipleStatements: true
         })
 
         console.log("MySQL Connected Successfully")
