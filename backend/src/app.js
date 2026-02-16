@@ -13,7 +13,8 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
+import router from "./routes/user.routes.js"
 
-const PORT = process.env.PORT
+app.use("/api/v1/user", router)
 
 export { app }

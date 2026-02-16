@@ -1,32 +1,33 @@
-  {
+{
     "name": "smart-ewaste",
     "version": "1.0.0",
     "description": "Final Year Project",
     "main": "index.js",
     "scripts": {
-      "dev": "nodemon src/index.js"
+        "dev": "nodemon src/index.js"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/SameerRana20/smart-e-waste-collection-and-management-system.git"
+        "type": "git",
+        "url": "git+https://github.com/SameerRana20/smart-e-waste-collection-and-management-system.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "type": "module",
     "bugs": {
-      "url": "https://github.com/SameerRana20/smart-e-waste-collection-and-management-system/issues"
+        "url": "https://github.com/SameerRana20/smart-e-waste-collection-and-management-system/issues"
     },
     "homepage": "https://github.com/SameerRana20/smart-e-waste-collection-and-management-system#readme",
     "dependencies": {
-      "cloudinary": "^2.9.0",
-      "cookie-parser": "^1.4.7",
-      "cors": "^2.8.6",
-      "dotenv": "^17.2.4",
-      "express": "^5.2.1",
-      "mysql2": "^3.16.3"
+        "bcrypt": "^6.0.0",
+        "cloudinary": "^2.9.0",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "dotenv": "^17.2.4",
+        "express": "^5.2.1",
+        "mysql2": "^3.16.3"
     },
     "devDependencies": {
-      "nodemon": "^3.1.11"
+        "nodemon": "^3.1.11"
     }
-  }
+}
