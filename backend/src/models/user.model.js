@@ -19,10 +19,19 @@ const findUserByEmail = async (email)=>{
     return rows[0]
 }
 
+const updateRefreshToken = async (user_id, refreshToken)=>{
+    const [result] = await connection.query(
+        `UPDATE users  SET refresh_token= ? 
+         WHERE user_id = ?`, [refreshToken, user_id]
+    )
+    return result
+}
+
 
 export
 {
     createUser,
-    findUserByEmail
+    findUserByEmail,
+    updateRefreshToken
 
 }

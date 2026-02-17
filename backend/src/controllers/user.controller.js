@@ -4,6 +4,8 @@ import { createUser, findUserByEmail } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js"
 import { apiResponse } from "../utils/apiResponse.js"
 import { hashPassword, isPasswordCorrect} from "../utils/password.util.js"
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util.js";
+import { updateRefreshToken } from "../models/user.model.js";
 
 const registerUser = asyncHandler(async (req, res)=>{
     const {full_name, email, password, phone, address, city } =req.body
@@ -72,8 +74,15 @@ const loginUser= asyncHandler(async(req, res)=>{
     throw new apiError(401, "Invalid Password")
    }
 
+   const accessToken= await generateAccessToken(user)
+   const refreshToken = await generateRefreshToken(user)
+
+   await updateRefreshToken(user.user_id, refreshToken)
+   
    res
    .status(200)
+   .cookie("accessToken", accessToken, { httpOnly: true, secure: true})
+   .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true})
    .json(
     new apiResponse(200, {
         userId: user.user_id,
