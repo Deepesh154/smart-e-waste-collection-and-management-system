@@ -19,6 +19,13 @@ const findUserByEmail = async (email)=>{
     return rows[0]
 }
 
+const findUserById = async(userId)=>{
+    const [rows] = await connection.query(
+        `SELECT * FROM users WHERE user_id = ?`, [userId]
+    )
+    return rows[0]
+}
+
 const updateRefreshToken = async (user_id, refreshToken)=>{
     const [result] = await connection.query(
         `UPDATE users  SET refresh_token= ? 
@@ -27,11 +34,38 @@ const updateRefreshToken = async (user_id, refreshToken)=>{
     return result
 }
 
+const removeRefreshToken = async (userId)=> {
+    const [result] = await connection.query(
+        `UPDATE users SET refresh_token = NULL WHERE user_id= ?`,[userId]
+    )
+    return result
+}
+
+const updatePassword = async(userId, newPassword)=>{
+    const [result]= await connection.query(
+        `UPDATE users SET password_hash = ? WHERE user_id= ? `,[newPassword, userId]
+    )
+    return result
+}
+
+const updateUserProfile = async (userId , data)=>{
+    const { full_name, city, phone, address }= data
+
+    const [result]= await connection.query(
+        `UPDATE users SET full_name= ? , city= ? , phone =? , address= ? WHERE user_id = ?`
+        , [full_name, city, phone, address, userId] 
+    )
+    return result
+}
 
 export
 {
     createUser,
     findUserByEmail,
-    updateRefreshToken
+    findUserById,
+    updateRefreshToken,
+    removeRefreshToken,
+    updatePassword, 
+    updateUserProfile
 
 }

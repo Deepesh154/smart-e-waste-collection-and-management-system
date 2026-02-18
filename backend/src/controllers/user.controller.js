@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt"
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { createUser, findUserByEmail } from "../models/user.model.js";
+import { createUser, findUserByEmail, removeRefreshToken, updatePassword, updateUserProfile } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js"
 import { apiResponse } from "../utils/apiResponse.js"
-import { hashPassword, isPasswordCorrect} from "../utils/password.util.js"
+import { hashPassword, isPasswordCorrect, isPasswordCorrect} from "../utils/password.util.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util.js";
 import { updateRefreshToken } from "../models/user.model.js";
 
@@ -93,8 +93,68 @@ const loginUser= asyncHandler(async(req, res)=>{
 
 })
 
+const logoutUser = asyncHandler(async(req, res)=> {
+    const { user_id }= req.user
+
+    await removeRefreshToken(user_id)
+
+    res
+    .cleaCookie("accessToken", { httpOnly : true, secure: true })
+    .clearCookie("refreshToken", { httpOnly: true, secure: true })
+    .json(
+        new apiResponse(200, {}, "Logged out successfully")
+    )
+})
+
+const changePassword = asyncHandler(async (req, res)=> {
+    const { password , newPassword }= req.body
+    const user_id  = req.user?.user_id 
+
+    const user = await findUserById(user_id)
+
+    if(!user) {
+        throw new apiError(404, "User not found")
+    }
+
+    const isPasswordCorrect = await isPasswordCorrect(password, newPassword)
+
+    if(!isPasswordCorrect){
+        throw new apiError(400, "invalid old password")
+    }
+
+    const newPassword_hash = await hashPassword(newPassword) 
+
+    await updatePassword(user.userId ,newPassword_hash)
+
+    res
+    .status(200)
+    .json(
+        new apiResponse(200, {}, "Password Updated successfully")
+    )
+})
+
+const updateProfile = asyncHandler(async(req, res)=>{
+    const { full_name, city, phone , address } = req.body
+    const userId = req.user.userId;
+
+    await updateUserProfile(userId , {
+        full_name,
+        city,
+        phone,
+        address
+    })
+
+    res
+    .status(200)
+    .json(
+        new apiResponse(200, {}, "Profile updated successfull")
+    )
+})
+
 export {
     registerUser,
     loginUser,
-
+    logoutUser, 
+    changePassword,
+    updateProfile
 }
